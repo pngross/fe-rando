@@ -26,6 +26,7 @@ var fe16ClassesFemale = []string{}
 
 var game = "FE16"
 var route = "CF"
+var maleCrossoverClasses = true // FE12 only
 
 func main() {
 	fmt.Println("Hello randomizer")
@@ -56,7 +57,7 @@ func main() {
 
 	randomNumber, zaehler, classIndex := 0, 0, 0
 
-	// dancer forcieren -> reroll bei Byleth oder Fakultätsmitgliedern.
+	// force dancer -> reroll for Byleth or faculty members
 	if forceDancer {
 		dancerFound := false
 		for !dancerFound {
@@ -71,7 +72,7 @@ func main() {
 		classSlotsLeft += 1
 	}
 
-	// Klassen randomisiert den Charakteren zuweisen
+	// randomly assign classes to output list
 	for i := 0; i < len(outputList); i++ {
 		for outputList[i].class == "" {
 			if (classSlotsLeft == 0) || !checkForValidClasses(listOfClasses, outputList[i]) {
@@ -107,29 +108,52 @@ func main() {
 	} else {
 		fmt.Println("Game: " + game)
 	}
-	// Ergebnis ausgeben
+	// print result to console
 	for i := 0; i < len(outputList); i++ {
 		fmt.Println(outputList[i].class + "!" + outputList[i].name)
 	}
 }
 
-// Prüft, ob eine Klasse einem Charakter zugewiesen werden kann - FE16-Version, erweiterbar für FE11/12
+// Check if a class matches a character
 func matchClass(class feClass, unit feChar) bool {
 	result := false
-	if ((class.gender == "N") || (class.gender == unit.gender)) && ((class.personal == "") || (class.personal == unit.name)) {
-		if (game == "FE16") && (class.name == "Dancer") {
-			if (unit.name != "Byleth") && (unit.specialProperty != "fac") && ((route != "SS") || (unit.specialProperty != "hilda")) {
+	if game == "FE16" {
+		if ((class.gender == "N") || (class.gender == unit.gender)) && ((class.personal == "") || (class.personal == unit.name)) {
+			if class.name == "Dancer" {
+				if (unit.name != "Byleth") && (unit.specialProperty != "fac") && ((route != "SS") || (unit.specialProperty != "hilda")) {
+					result = true
+				}
+			} else {
 				result = true
 			}
-		} else {
+		}
+	} else if game == "FE12" {
+		if class.gender == "A" {
+			if (unit.gender == "F") || (unit.gender == "A") || ((unit.gender == "B") && maleCrossoverClasses) {
+				result = true
+			}
+		} else if class.gender == "B" {
+			if (unit.gender == "B") || ((unit.gender == "A") && maleCrossoverClasses) {
+				result = true
+			}
+		} else if class.gender == "D" { // special scenario in FE12 - female General
+			if (unit.gender == "F") || (unit.gender == "B") || ((unit.gender == "A") && maleCrossoverClasses) {
+				result = true
+			}
+		}
+	} else if game == "FE11" {
+		if class.gender == "A" {
+			if (unit.gender == "F") || (unit.gender == "A") { // must be male with A class-set or female
+				result = true
+			}
+		} else if (class.gender == "B") && (unit.gender == "B") {
 			result = true
 		}
 	}
-
 	return result
 }
 
-// gibt es kompatible Klassen mit >0 Restanzahl
+// check if there are any compatible classes for the character
 func checkForValidClasses(listOfClasses []feClass, unit feChar) bool {
 	for i := 0; i < len(listOfClasses); i++ {
 		if matchClass(listOfClasses[i], unit) && (listOfClasses[i].amountLeft > 0) {
