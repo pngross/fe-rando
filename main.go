@@ -9,14 +9,14 @@ import (
 
 type feChar struct {
 	name            string
-	gender          string
+	classSet        string
 	specialProperty string
 	class           string
 }
 
 type feClass struct {
 	name       string
-	gender     string
+	classSet   string
 	personal   string
 	amountLeft int
 }
@@ -118,7 +118,7 @@ func main() {
 func matchClass(class feClass, unit feChar) bool {
 	result := false
 	if game == "FE16" {
-		if ((class.gender == "N") || (class.gender == unit.gender)) && ((class.personal == "") || (class.personal == unit.name)) {
+		if ((class.classSet == "N") || (class.classSet == unit.classSet)) && ((class.personal == "") || (class.personal == unit.name)) {
 			if class.name == "Dancer" {
 				if (unit.name != "Byleth") && (unit.specialProperty != "fac") && ((route != "SS") || (unit.specialProperty != "hilda")) {
 					result = true
@@ -128,25 +128,25 @@ func matchClass(class feClass, unit feChar) bool {
 			}
 		}
 	} else if game == "FE12" {
-		if class.gender == "A" {
-			if (unit.gender == "F") || (unit.gender == "A") || ((unit.gender == "B") && maleCrossoverClasses) {
+		if class.classSet == "A" {
+			if (unit.classSet == "F") || (unit.classSet == "A") || ((unit.classSet == "B") && maleCrossoverClasses) {
 				result = true
 			}
-		} else if class.gender == "B" {
-			if (unit.gender == "B") || ((unit.gender == "A") && maleCrossoverClasses) {
+		} else if class.classSet == "B" {
+			if (unit.classSet == "B") || ((unit.classSet == "A") && maleCrossoverClasses) {
 				result = true
 			}
-		} else if class.gender == "D" { // special scenario in FE12 - female General
-			if (unit.gender == "F") || (unit.gender == "B") || ((unit.gender == "A") && maleCrossoverClasses) {
+		} else if class.classSet == "D" { // special scenario in FE12 - female General
+			if (unit.classSet == "F") || (unit.classSet == "B") || ((unit.classSet == "A") && maleCrossoverClasses) {
 				result = true
 			}
 		}
 	} else if game == "FE11" {
-		if class.gender == "A" {
-			if (unit.gender == "F") || (unit.gender == "A") { // must be male with A class-set or female
+		if class.classSet == "A" {
+			if (unit.classSet == "F") || (unit.classSet == "A") { // must be male with A class-set or female
 				result = true
 			}
-		} else if (class.gender == "B") && (unit.gender == "B") {
+		} else if (class.classSet == "B") && (unit.classSet == "B") {
 			result = true
 		}
 	}
@@ -197,7 +197,7 @@ func readAllUnits() ([]feChar, []feChar) {
 				if j == 0 {
 					currentChar.name = field
 				} else if j == 1 {
-					currentChar.gender = field
+					currentChar.classSet = field
 				} else if j == 2 {
 					unitRoutes = field
 				} else if j == 3 {
@@ -243,7 +243,7 @@ func readAllClasses(amount int) []feClass {
 				if j == 0 {
 					currentClass.name = field
 				} else if j == 1 {
-					currentClass.gender = field
+					currentClass.classSet = field
 				} else if j == 2 {
 					currentClass.personal = field
 				}
