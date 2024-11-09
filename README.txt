@@ -33,21 +33,36 @@ Picking yes is highly recommended.
 "male_crossover: <yes|no>"
 FE12 only
 Choose if male units in FE12 can receive classes from the other class set (between A- and B-set classes).
+
 Example:
 Barst starts out with a B-set, so without crossover classes, he can only become a Warrior, General, Berserker, Horseman, Hero or Sorcerer.
 With crossover classes, he can be randomized into the A-set classes aswell, such as Swordmaster, Paladin and Dracoknight.
 
 "units: <number>"
-total number of team members (excluding free units like Nagi/Gotoh in FE11 and endgame bishops in FE12)
+total number of team members (excluding automatically free units like Nagi/Gotoh in FE11 and endgame bishops in FE12)
 
 "same_class_limit: <number>"
-maximum number of units that can receive the same class. E. g. if you choose "2" as a  randomizer already gave Dracoknih
+maximum number of units that can receive the same class.
+
+Example:
+You choose "2" for this option and the randomizer already gave Dracoknight to 2 characters.
+It then notices that the limit has been reached and makes sure all following units get a different class.
+
+Exception:
+If the limit has been reached for all eligible classes, a random class will be picked from the list regardless of the limit.
+This can occur if you choose a high number of team members, paired with a low same-class limit.
 
 "gaidens: <yes|no>"
-FE11 only, decides if gaiden characters can be assigned to the team
+FE11 only
+Decides if gaiden characters (Athena, Horace, Etzel, Ymir) can be assigned to the team.
+Only recommended if you use a patch that removes the gaiden requirements, or you'll have to sacrifice everyone else to get all team members.
 
 
 EXAMPLE CONTENT FOR A SETTINGS FILE:
+
+------
+filename: settings.txt
+------
 game: FE16
 route: AM
 force_dancer: yes
@@ -55,6 +70,7 @@ male_crossover: yes
 units: 15
 same_class_limit: 2
 gaidens: yes
+------
 
 When reading this file, the randomizer notices that the game is FE16, so the irrelevant settings "male_crossover" and "gaidens" are ignored.
 It will throw an error if the 
