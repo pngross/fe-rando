@@ -28,6 +28,7 @@ type randomizerSettings struct {
 	useMaleCrossover TernaryBool // FE12 only
 	route            string      // FE16 only
 	forceDancer      TernaryBool // FE12/FE16 only
+	forceJagen       TernaryBool // FE11/FE12 only
 }
 
 type TernaryBool int

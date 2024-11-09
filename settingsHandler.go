@@ -72,6 +72,12 @@ func readSettings() (randomizerSettings, error) {
 			} else {
 				settings.numberPerClass = intChecked
 			}
+		} else if optionName == "force_jagen" {
+			if x == "yes" {
+				settings.forceJagen = Yes
+			} else if x == "no" {
+				settings.forceJagen = No
+			}
 		} else {
 			return settings, errors.New("Invalid option name in line " + string(lineNo) + " - check the readme file for valid option names.")
 		}
@@ -105,12 +111,18 @@ func validateSettings(settings randomizerSettings) (randomizerSettings, error) {
 			if settings.forceDancer == Unclear {
 				errmsg += "FE12: Settings don't specify if you want to force a dancer. Make sure the settings.txt file contains the following line:\nforce_dancer: <yes|no>\n"
 			}
+			if settings.forceJagen == Unclear {
+				errmsg += "FE12: Settings don't specify if you want to force the Jagen. Make sure the settings.txt file contains the following line:\nforce_jagen: <yes|no>\n"
+			}
 		} else if settings.game == "FE11" {
 			settings.route = ""
 			settings.useMaleCrossover = Unclear
 			settings.forceDancer = Unclear
 			if settings.useGaidens == Unclear {
 				return settings, errors.New("FE11: Settings don't specify if you want gaiden characters. Make sure the settings.txt file contains the following line:\ngaidens: <yes|no>\n")
+			}
+			if settings.forceJagen == Unclear {
+				errmsg += "FE11: Settings don't specify if you want to force the Jagen. Make sure the settings.txt file contains the following line:\nforce_jagen: <yes|no>\n"
 			}
 		}
 	}

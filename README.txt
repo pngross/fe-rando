@@ -5,6 +5,14 @@ Currently supports the following editions:
 - FE12 (New Mystery of the Emblem)
 - FE16 (Three Houses)
 
+INSTALLATION STEPS:
+1. Install Go (golang.org)
+2. Clone or download the repo
+3. Create a settings file (see below)
+4. Execute "buildRando.cmd"
+5. Execute "randomize.cmd"
+6. the file out/output.txt will contain your team
+
 SETTINGS FILE:
 
 You MUST add a file named "settings.txt" to the directory.

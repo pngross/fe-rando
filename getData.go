@@ -53,6 +53,8 @@ func readAllUnits(settings randomizerSettings) ([]feChar, []feChar, []feChar) {
 			} else {
 				if currentChar.specialProperty == "lord" || (settings.game == "FE12" && settings.forceDancer == Yes && currentChar.specialProperty == "dancer") {
 					forcedChars = append(forcedChars, currentChar)
+				} else if settings.forceJagen == Yes && currentChar.specialProperty == "jagen" {
+					forcedChars = append(forcedChars, currentChar)
 				} else if currentChar.specialProperty == "free" {
 					freeChars = append(freeChars, currentChar)
 				} else if settings.game == "FE12" || settings.useGaidens == Yes || currentChar.specialProperty != "gaiden" {
