@@ -64,7 +64,7 @@ func generateAvatarUnit(settings randomizerSettings) feChar {
 			return feChar{"Kris", "F", "", krisClasses[random.IntN(5)]}
 		} else {
 			fmt.Println("Male Kris was chosen")
-			mKrisClasses := []string{"Knight->General", "Cav->Paladin", "Fighter->Warrior", "Archer->Sniper", "Archer->Horseman", "Mercenary->Hero", "Mage->Sage"}
+			mKrisClasses := []string{"Knight->General", "Cav->Paladin", "Fighter->Warrior", "Archer->Sniper", "Mercenary->Hero", "Mage->Sage"}
 			return feChar{"Kris", "M", "", mKrisClasses[random.IntN(6)]}
 		}
 	} else {
