@@ -87,10 +87,9 @@ I like the following ruleset: allow all classes with matching or lower weapon re
 E. g. Mortal Savant has A Swords and B+ Reason
 -> if a unit receives Mortal Savant, the unit can use all classes which...
 - only require sword and/or reason rank
-- require A or less in sword rank and 
+- require A or less in sword rank and B+ or less in reason rank
 
-In FE11 and FE12, the unpromoted classes correspond pretty exactly, aside from male dracoknight, female Paladin (FE11) and female General (FE12),
-so the lower-tier classes are pretty obvious.
+In FE11 and FE12, the unpromoted classes correspond pretty exactly, aside from male dracoknight, female Paladin (FE11) and female General (FE12), so the lower-tier classes are pretty obvious.
 
 In FE12, I like to give female Generals both Archer and Cav as options before promotions, while male Dracoknights can choose between Fighter or Cav.
-In FE11, Cavalier->M!Dracoknight and Pegasus Knight->F!Paladin are obvious.
+FE11: Cavalier->M!Dracoknight and Pegasus Knight->F!Paladin.
