@@ -68,9 +68,6 @@ Only recommended if you use a patch that removes the gaiden requirements, or you
 
 EXAMPLE CONTENT FOR A SETTINGS FILE:
 
-------
-filename: settings.txt
-------
 game: FE16
 route: AM
 force_dancer: yes
@@ -78,7 +75,7 @@ male_crossover: yes
 units: 15
 same_class_limit: 2
 gaidens: yes
-------
+force_jagen: yes
 
 When reading this file, the randomizer notices that the game is FE16, so the irrelevant settings "male_crossover" and "gaidens" are ignored.
 It will throw an error if the 
