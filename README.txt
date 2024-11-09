@@ -38,6 +38,10 @@ FE12 and FE16 only
 Choose if the randomizer always gives you a dancer (random team member in FE16, Feena in FE12).
 Picking yes is highly recommended.
 
+"force_jagen: <yes|no>"
+FE11 and FE12 only
+Choose if the randomizer always includes Jagen (FE11) or Arran (FE12). Still assigns them a random class.
+
 "male_crossover: <yes|no>"
 FE12 only
 Choose if male units in FE12 can receive classes from the other class set (between A- and B-set classes).
