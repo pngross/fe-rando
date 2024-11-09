@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-func readAllUnits(settings randomizerSettings) ([]feChar, []feChar) {
-	forcedChars, allChars := []feChar{}, []feChar{}
+func readAllUnits(settings randomizerSettings) ([]feChar, []feChar, []feChar) {
+	forcedChars, allChars, freeChars := []feChar{}, []feChar{}, []feChar{}
 
 	f, err := os.Open("data/units_" + settings.game + ".csv")
 	if err != nil {
@@ -53,14 +53,15 @@ func readAllUnits(settings randomizerSettings) ([]feChar, []feChar) {
 			} else {
 				if currentChar.specialProperty == "lord" || (settings.game == "FE12" && settings.forceDancer == Yes && currentChar.specialProperty == "dancer") {
 					forcedChars = append(forcedChars, currentChar)
-				} else {
+				} else if currentChar.specialProperty == "free" {
+					freeChars = append(freeChars, currentChar)
+				} else if settings.game == "FE12" || settings.useGaidens == Yes || currentChar.specialProperty != "gaiden" {
 					allChars = append(allChars, currentChar)
 				}
 			}
 		}
 	}
-
-	return forcedChars, allChars
+	return forcedChars, allChars, freeChars
 }
 
 func readAllClasses(amount int, settings randomizerSettings) []feClass {
@@ -91,7 +92,9 @@ func readAllClasses(amount int, settings randomizerSettings) []feClass {
 				}
 			}
 			currentClass.amountLeft = amount
-			allClasses = append(allClasses, currentClass)
+			if (settings.game == "FE16") || (currentClass.classSet != "P") {
+				allClasses = append(allClasses, currentClass)
+			}
 		}
 	}
 	return allClasses

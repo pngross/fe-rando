@@ -46,18 +46,15 @@ func main() {
 		fmt.Println(err.Error())
 		return
 	}
-	err = validateSettings(settings)
+	settings, err = validateSettings(settings)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
-	allChars := []feChar{}
-	forcedChars := []feChar{}
-
 	dancer := feClass{"Dancer", "N", "", 1}
 
-	forcedChars, allChars = readAllUnits(settings)
+	forcedChars, allChars, freeChars := readAllUnits(settings)
 
 	if settings.game == "FE12" || settings.game == "FE16" {
 		forcedChars = append(forcedChars, generateAvatarUnit(settings))
@@ -125,5 +122,12 @@ func main() {
 	// print result to console
 	for i := 0; i < len(outputList); i++ {
 		fmt.Println(outputList[i].className + "!" + outputList[i].name)
+	}
+
+	if len(freeChars) > 0 {
+		fmt.Print("\nFree Units: ")
+		for i := 0; i < len(freeChars); i++ {
+			fmt.Print(freeChars[i].name + " ")
+		}
 	}
 }

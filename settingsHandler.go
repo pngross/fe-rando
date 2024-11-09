@@ -41,21 +41,21 @@ func readSettings() (randomizerSettings, error) {
 		} else if optionName == "route" {
 			settings.route = x
 		} else if optionName == "male_crossover" {
-			if (x == "yes") || (x == "true") {
+			if x == "yes" {
 				settings.useMaleCrossover = Yes
-			} else if (x == "no") || (x == "false") {
+			} else if x == "no" {
 				settings.useMaleCrossover = No
 			}
 		} else if optionName == "gaidens" {
 			if (x == "yes") || (x == "true") {
 				settings.useGaidens = Yes
-			} else if (x == "no") || (x == "false") {
+			} else if x == "no" {
 				settings.useGaidens = No
 			}
 		} else if optionName == "force_dancer" {
-			if (x == "yes") || (x == "true") {
+			if x == "yes" {
 				settings.forceDancer = Yes
-			} else if (x == "no") || (x == "false") {
+			} else if x == "no" {
 				settings.forceDancer = No
 			}
 		} else if optionName == "units" {
@@ -79,10 +79,10 @@ func readSettings() (randomizerSettings, error) {
 	return settings, nil
 }
 
-func validateSettings(settings randomizerSettings) error {
+func validateSettings(settings randomizerSettings) (randomizerSettings, error) {
 	errmsg := ""
 	if settings.game == "" {
-		return errors.New("No FE game was named. Add the following line to the settings.txt file and specify one of the games:\ngame: <FE11|FE12|FE16>\n")
+		return settings, errors.New("No FE game was named. Add the following line to the settings.txt file and specify one of the games:\ngame: <FE11|FE12|FE16>\n")
 	} else {
 		if settings.numberOfUnits == 0 {
 			errmsg = "Number of team members is missing or zero. Make sure the settings.txt file contains the following line:\nunits: <number>\n"
@@ -110,16 +110,16 @@ func validateSettings(settings randomizerSettings) error {
 			settings.useMaleCrossover = Unclear
 			settings.forceDancer = Unclear
 			if settings.useGaidens == Unclear {
-				return errors.New("FE11: Settings don't specify if you want gaiden characters. Make sure the settings.txt file contains the following line:\ngaidens: <yes|no>\n")
+				return settings, errors.New("FE11: Settings don't specify if you want gaiden characters. Make sure the settings.txt file contains the following line:\ngaidens: <yes|no>\n")
 			}
 		}
 	}
 	if errmsg != "" {
-		return errors.New(errmsg)
+		return settings, errors.New(errmsg)
 	}
 
 	if settings.numberPerClass == 0 {
 		fmt.Println("Number of units per class is missing or set to zero -> unlimited")
 	}
-	return nil
+	return settings, nil
 }

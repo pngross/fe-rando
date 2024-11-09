@@ -10,7 +10,7 @@ import (
 func matchClass(class feClass, unit feChar, settings randomizerSettings) bool {
 	result := false
 	if class.classSet == "P" {
-		return strings.ReplaceAll(class.personal, unit.name, "") == class.personal
+		return strings.ReplaceAll(class.personal, unit.name, "") != class.personal
 	} else if settings.game == "FE16" {
 		if ((class.classSet == "N") || (class.classSet == unit.classSet)) && ((class.personal == "") || (class.personal == unit.name)) {
 			if class.name == "Dancer" {
@@ -24,7 +24,7 @@ func matchClass(class feClass, unit feChar, settings randomizerSettings) bool {
 	} else if settings.game == "FE11" || settings.game == "FE12" {
 		// handles FE12's special cases: female-exclusive Falcoknight (class set "F") and special case dual-gender General (class set "D")
 		// in FE11, male crossover is deactivated and classes always have A, B or P as a class set - the return formula was unified so it works either way
-		return (unit.classSet == "F" && class.classSet != "B") || unit.classSet == class.classSet || (class.classSet != "F" && unit.classSet != "F" && settings.useMaleCrossover == Yes)
+		return (unit.classSet == "F" && class.classSet != "B") || (unit.classSet == class.classSet && (class.classSet != "F" || unit.specialProperty != "no-falco")) || (class.classSet != "F" && unit.classSet != "F" && settings.useMaleCrossover == Yes)
 	}
 	return result
 }
