@@ -6,7 +6,7 @@ Currently supports the following editions:
 - FE16 (Three Houses)
 
 INSTALLATION STEPS:
-1. Install Go (golang.org)
+1. Install Go (https://go.dev)
 2. Clone or download the repo
 3. Create a settings file (see below)
 4. Execute "buildRando.cmd"
