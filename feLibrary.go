@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	random "math/rand/v2"
 	"strings"
 )
@@ -45,4 +46,28 @@ func randomizeList(inputList []feChar, amount int) []feChar {
 		outputList = append(outputList, inputList[shufflingOrder[i]])
 	}
 	return outputList
+}
+
+func generateAvatarUnit(settings randomizerSettings) feChar {
+	if settings.game == "FE16" {
+		if random.IntN(2) == 0 {
+			fmt.Println("Female Byleth was chosen")
+			return feChar{"Byleth", "F", "", ""}
+		} else {
+			fmt.Println("Male Byleth was chosen")
+			return feChar{"Byleth", "M", "", ""}
+		}
+	} else if settings.game == "FE12" {
+		if random.IntN(2) == 0 {
+			fmt.Println("Female Kris was chosen")
+			krisClasses := []string{"Pegasus Knight->Dracoknight/Falcoknight", "Cav->Paladin", "Archer->Sniper", "Myrmidon->Swordmaster", "Mage->Sage"}
+			return feChar{"Kris", "F", "", krisClasses[random.IntN(5)]}
+		} else {
+			fmt.Println("Male Kris was chosen")
+			mKrisClasses := []string{"Knight->General", "Cav->Paladin", "Fighter->Warrior", "Archer->Sniper", "Archer->Horseman", "Mercenary->Hero", "Mage->Sage"}
+			return feChar{"Kris", "M", "", mKrisClasses[random.IntN(6)]}
+		}
+	} else {
+		return feChar{}
+	}
 }

@@ -79,7 +79,47 @@ func readSettings() (randomizerSettings, error) {
 	return settings, nil
 }
 
-func validateSettings() error {
+func validateSettings(settings randomizerSettings) error {
+	errmsg := ""
+	if settings.game == "" {
+		return errors.New("No FE game was named. Add the following line to the settings.txt file and specify one of the games:\ngame: <FE11|FE12|FE16>\n")
+	} else {
+		if settings.numberOfUnits == 0 {
+			errmsg = "Number of team members is missing or zero. Make sure the settings.txt file contains the following line:\nunits: <number>\n"
+		}
+		if settings.game == "FE16" {
+			settings.useGaidens = Unclear
+			settings.useMaleCrossover = Unclear
+			if settings.route == "" {
+				errmsg += "FE16: You didn't specify a route. Make sure the settings.txt file contains the following line:\nroute: <CF|AM|VW|SS>\n"
+			}
+			if settings.forceDancer == Unclear {
+				errmsg += "FE16: Settings don't specify if you want to force a dancer. Make sure the settings.txt file contains the following line:\nforce_dancer: <yes|no>\n"
+			}
+		} else if settings.game == "FE12" {
+			settings.route = ""
+			settings.useGaidens = Unclear
+			if settings.useMaleCrossover == Unclear {
+				errmsg += "FE12: Settings don't specify if you want male crossover class sets. Make sure the settings.txt file contains the following line:\nmale_crossover: <yes|no>\n"
+			}
+			if settings.forceDancer == Unclear {
+				errmsg += "FE12: Settings don't specify if you want to force a dancer. Make sure the settings.txt file contains the following line:\nforce_dancer: <yes|no>\n"
+			}
+		} else if settings.game == "FE11" {
+			settings.route = ""
+			settings.useMaleCrossover = Unclear
+			settings.forceDancer = Unclear
+			if settings.useGaidens == Unclear {
+				return errors.New("FE11: Settings don't specify if you want gaiden characters. Make sure the settings.txt file contains the following line:\ngaidens: <yes|no>\n")
+			}
+		}
+	}
+	if errmsg != "" {
+		return errors.New(errmsg)
+	}
 
+	if settings.numberPerClass == 0 {
+		fmt.Println("Number of units per class is missing or set to zero -> unlimited")
+	}
 	return nil
 }

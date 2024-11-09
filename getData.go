@@ -33,7 +33,11 @@ func readAllUnits(settings randomizerSettings) ([]feChar, []feChar) {
 				} else if j == 1 {
 					currentChar.classSet = field
 				} else if j == 2 {
-					unitRoutes = field
+					if settings.game == "FE16" { // col.2 specifies in which route a unit exists in FE16
+						unitRoutes = field
+					} else { // col.2 is for units with fixed classes in FE11/FE12
+						currentChar.className = field
+					}
 				} else if j == 3 {
 					currentChar.specialProperty = field
 				}
@@ -47,7 +51,11 @@ func readAllUnits(settings randomizerSettings) ([]feChar, []feChar) {
 					}
 				}
 			} else {
-				allChars = append(allChars, currentChar)
+				if currentChar.specialProperty == "lord" || (settings.game == "FE12" && settings.forceDancer == Yes && currentChar.specialProperty == "dancer") {
+					forcedChars = append(forcedChars, currentChar)
+				} else {
+					allChars = append(allChars, currentChar)
+				}
 			}
 		}
 	}
@@ -86,6 +94,5 @@ func readAllClasses(amount int, settings randomizerSettings) []feClass {
 			allClasses = append(allClasses, currentClass)
 		}
 	}
-
 	return allClasses
 }

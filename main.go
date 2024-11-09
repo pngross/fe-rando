@@ -46,11 +46,9 @@ func main() {
 		fmt.Println(err.Error())
 		return
 	}
-	err = validateSettings()
+	err = validateSettings(settings)
 	if err != nil {
-
-	}
-	if settings.game == "" {
+		fmt.Println(err.Error())
 		return
 	}
 
@@ -61,12 +59,8 @@ func main() {
 
 	forcedChars, allChars = readAllUnits(settings)
 
-	if random.IntN(2) == 0 {
-		forcedChars = append(forcedChars, feChar{"Byleth", "F", "", ""})
-		fmt.Println("Female Byleth was chosen")
-	} else {
-		forcedChars = append(forcedChars, feChar{"Byleth", "M", "", ""})
-		fmt.Println("Male Byleth was chosen")
+	if settings.game == "FE12" || settings.game == "FE16" {
+		forcedChars = append(forcedChars, generateAvatarUnit(settings))
 	}
 
 	outputList := randomizeList(allChars, settings.numberOfUnits-len(forcedChars))
@@ -77,19 +71,21 @@ func main() {
 
 	randomNumber, zaehler, classIndex := 0, 0, 0
 
-	// force dancer -> reroll for Byleth, Silver Snow!Hilda or faculty members
-	if settings.forceDancer == Yes {
-		dancerFound := false
-		for !dancerFound {
-			randomNumber = random.IntN(len(outputList))
-			if matchClass(dancer, outputList[randomNumber], settings) {
-				outputList[randomNumber].className = "Dancer"
-				dancerFound = true
+	// check the force dancer setting (FE16 only) -> reroll for Byleth, Silver Snow!Hilda or faculty members
+	if settings.game == "FE16" {
+		if settings.forceDancer == Yes {
+			dancerFound := false
+			for !dancerFound {
+				randomNumber = random.IntN(len(outputList))
+				if matchClass(dancer, outputList[randomNumber], settings) {
+					outputList[randomNumber].className = "Dancer"
+					dancerFound = true
+				}
 			}
+		} else {
+			listOfClasses = append(listOfClasses, dancer)
+			classSlotsLeft += 1
 		}
-	} else {
-		listOfClasses = append(listOfClasses, dancer)
-		classSlotsLeft += 1
 	}
 
 	// randomly assign classes to output list
@@ -122,11 +118,9 @@ func main() {
 		}
 	}
 
-	if (settings.game == "FE16") || (settings.game == "FE14") {
-		fmt.Println("Game: " + settings.game)
+	fmt.Println("Game: " + settings.game)
+	if (settings.game == "FE16") || (settings.game == "FE14") { // added FE14 scenario because I might add an implementation for FE14
 		fmt.Println("Route: " + settings.route)
-	} else {
-		fmt.Println("Game: " + settings.game)
 	}
 	// print result to console
 	for i := 0; i < len(outputList); i++ {
