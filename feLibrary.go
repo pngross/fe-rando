@@ -6,6 +6,40 @@ import (
 	"strings"
 )
 
+type feChar struct {
+	name            string
+	classSet        string
+	specialProperty string
+	className       string
+}
+
+type feClass struct {
+	name       string
+	classSet   string
+	personal   string
+	amountLeft int
+}
+
+// Controlled by settings file
+type randomizerSettings struct {
+	game             string
+	numberOfUnits    int
+	numberPerClass   int
+	useGaidens       TernaryBool // FE11 only
+	useMaleCrossover TernaryBool // FE12 only
+	route            string      // FE16 only
+	forceDancer      TernaryBool // FE12/FE16 only
+	forceJagen       TernaryBool // FE11/FE12 only
+}
+
+type TernaryBool int
+
+const (
+	Unclear TernaryBool = iota
+	Yes
+	No
+)
+
 // Check if a class matches a character
 func matchClass(class feClass, unit feChar, settings randomizerSettings) bool {
 	result := false
