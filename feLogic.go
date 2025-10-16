@@ -40,6 +40,8 @@ const (
 	No
 )
 
+var supportedGames = []string{"FE11", "FE12", "FE16"}
+
 // Check if a class matches a character
 func matchClass(class feClass, unit feChar, settings randomizerSettings) bool {
 	result := false
@@ -57,7 +59,8 @@ func matchClass(class feClass, unit feChar, settings randomizerSettings) bool {
 		}
 	} else if settings.game == "FE11" || settings.game == "FE12" {
 		// handles FE12's special cases: female-exclusive Falcoknight (class set "F") and special case dual-gender General (class set "D")
-		// in FE11, male crossover is deactivated and classes always have A, B or P as a class set - the return formula was unified so it works either way
+		// in FE11, male crossover is deactivated and classes always have A, B or P as a class set
+		// the return formula was unified so it works either way
 		return (unit.classSet == "F" && class.classSet != "B") || (unit.classSet == class.classSet && (class.classSet != "F" || unit.specialProperty != "no-falco")) || (class.classSet != "F" && unit.classSet != "F" && settings.useMaleCrossover == Yes)
 	}
 	return result

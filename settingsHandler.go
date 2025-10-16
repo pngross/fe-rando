@@ -5,12 +5,34 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
 
-func readSettings() (randomizerSettings, error) {
-	f, err := os.Open("settings.txt")
+func readDefaultSettings(game string) (randomizerSettings, error) {
+	settings, err := readSettings(fmt.Sprintf("settings_%s.txt", game))
+
+	if err != nil {
+		settings = randomizerSettings{forceDancer: Yes,
+			forceJagen:       Yes,
+			useMaleCrossover: No,
+			useGaidens:       No,
+			numberOfUnits:    12,
+			numberPerClass:   2}
+	}
+
+	if !slices.Contains(supportedGames, game) {
+		return settings, errors.New("Game " + game + " is unknown")
+	} else {
+		settings.game = game
+	}
+
+	return settings, err
+}
+
+func readSettings(filepath string) (randomizerSettings, error) {
+	f, err := os.Open(filepath)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -32,13 +54,7 @@ func readSettings() (randomizerSettings, error) {
 		optionName := strings.Trim(line[0], " ")
 		x := strings.Trim(line[1], " ")
 
-		if optionName == "game" {
-			if (x != "FE11") && (x != "FE12") && (x != "FE16") {
-				return settings, errors.New("Game " + x + " is unknown")
-			} else {
-				settings.game = x
-			}
-		} else if optionName == "route" {
+		if optionName == "route" {
 			settings.route = x
 		} else if optionName == "male_crossover" {
 			if x == "yes" {

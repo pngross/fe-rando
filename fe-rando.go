@@ -10,23 +10,9 @@ func main() {
 	application.window.ShowAndRun()
 }
 
-func oldMain() {
-
-	fmt.Println("Hello randomizer")
-
-	settings, err := readSettings()
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	settings, err = validateSettings(settings)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
+func RandomizeTeam(settings randomizerSettings) string {
 
 	dancer := feClass{"Dancer", "N", "", 1}
-
 	forcedChars, allChars, freeChars := readAllUnits(settings)
 
 	if settings.game == "FE12" || settings.game == "FE16" {
@@ -88,19 +74,20 @@ func oldMain() {
 		}
 	}
 
-	fmt.Println("Game: " + settings.game)
+	output := fmt.Sprintf("Game: %s\n", settings.game)
 	if (settings.game == "FE16") || (settings.game == "FE14") { // added FE14 scenario because I might add an implementation for FE14
-		fmt.Println("Route: " + settings.route)
+		output += fmt.Sprintf("Route: %s\n", settings.route)
 	}
 	// print result to console
 	for i := 0; i < len(outputList); i++ {
-		fmt.Println(outputList[i].className + "!" + outputList[i].name)
+		output += fmt.Sprintf("%s!%s\n", outputList[i].className, outputList[i].name)
 	}
 
 	if len(freeChars) > 0 {
 		fmt.Print("\nFree Units: ")
 		for i := 0; i < len(freeChars); i++ {
-			fmt.Print(freeChars[i].name + " ")
+			output += freeChars[i].name + " "
 		}
 	}
+	return output
 }

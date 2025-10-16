@@ -7,8 +7,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-var supportedGames = []string{"FE11", "FE12", "FE16"}
-
 type Randomizer struct {
 	app      fyne.App
 	window   fyne.Window
@@ -37,20 +35,23 @@ func (r *Randomizer) SelectGame(game string) {
 	menu := container.NewVBox()
 	menu.Add(widget.NewLabel(game + " - Settings:"))
 
+	r.settings, _ = readDefaultSettings(game)
+
 	// TODO INSERT SETTINGS HERE
 	// additional idea: allow default settings (one per game) to be saved and loaded via a json file
 
+	menu.Add(widget.NewButton("Randomize!", func() { r.Randomize() }))
 	menu.Add(r.ReturnBtn())
 	r.window.SetContent(menu)
 }
 
 func (r *Randomizer) Randomize() {
-
-	// TODO RANDOMIZE
+	randomizedTeam := RandomizeTeam(r.settings)
 
 	resultsPage := container.NewVBox()
 
-	// TODO DISPLAY TEAM IN UI
+	textbox := widget.NewLabel(randomizedTeam)
+	resultsPage.Add(textbox)
 
 	// TODO SAVE should be same as current saving mechanism,
 	// but you get to choose a filename via the UI

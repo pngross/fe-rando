@@ -1,0 +1,7 @@
+route: AM
+force_dancer: yes
+force_jagen: yes
+male_crossover: no
+units: 12
+same_class_limit: 2
+gaidens: no
