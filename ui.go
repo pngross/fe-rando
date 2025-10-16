@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -53,13 +55,16 @@ func (r *Randomizer) Randomize() {
 	textbox := widget.NewLabel(randomizedTeam)
 	resultsPage.Add(textbox)
 
-	// TODO SAVE should be same as current saving mechanism,
-	// but you get to choose a filename via the UI
+	resultsPage.Add(widget.NewLabel("Save to: "))
+	filenameEntry := widget.NewEntry()
+	filenameEntry.Text = fmt.Sprintf(`out\%s_team.txt`, r.settings.game)
+	resultsPage.Add(filenameEntry)
 
 	buttons := container.NewHBox()
-	buttons.Add(widget.NewButton("Save", func() {}))
+	buttons.Add(widget.NewButton("Save", func() { SaveToFile(randomizedTeam, filenameEntry.Text) }))
 	buttons.Add(widget.NewButton("Reroll", func() { r.Randomize() }))
 	buttons.Add(r.ReturnBtn())
+
 	resultsPage.Add(buttons)
 	r.window.SetContent(resultsPage)
 }

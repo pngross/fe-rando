@@ -12,11 +12,22 @@ func main() {
 
 func RandomizeTeam(settings randomizerSettings) string {
 
+	output := fmt.Sprintf("Game: %s\n", settings.game)
+	if (settings.game == "FE16") || (settings.game == "FE14") { // added FE14 scenario because I might add an implementation for FE14
+		output += fmt.Sprintf("Route: %s\n", settings.route)
+	}
+
 	dancer := feClass{"Dancer", "N", "", 1}
 	forcedChars, allChars, freeChars := readAllUnits(settings)
 
 	if settings.game == "FE12" || settings.game == "FE16" {
-		forcedChars = append(forcedChars, generateAvatarUnit(settings))
+		avatar := generateAvatarUnit(settings)
+		forcedChars = append(forcedChars, avatar)
+		if avatar.classSet == "F" {
+			output += fmt.Sprintf("Female %s was chosen!\n", avatar.name)
+		} else {
+			output += fmt.Sprintf("Male %s was chosen!\n", avatar.name)
+		}
 	}
 
 	outputList := randomizeList(allChars, settings.numberOfUnits-len(forcedChars))
@@ -29,7 +40,7 @@ func RandomizeTeam(settings randomizerSettings) string {
 
 	// check the force dancer setting (FE16 only) -> reroll for Byleth, Silver Snow!Hilda or faculty members
 	if settings.game == "FE16" {
-		if settings.forceDancer == Yes {
+		if settings.forceDancer {
 			dancerFound := false
 			for !dancerFound {
 				randomNumber = random.IntN(len(outputList))
@@ -74,17 +85,13 @@ func RandomizeTeam(settings randomizerSettings) string {
 		}
 	}
 
-	output := fmt.Sprintf("Game: %s\n", settings.game)
-	if (settings.game == "FE16") || (settings.game == "FE14") { // added FE14 scenario because I might add an implementation for FE14
-		output += fmt.Sprintf("Route: %s\n", settings.route)
-	}
 	// print result to console
 	for i := 0; i < len(outputList); i++ {
 		output += fmt.Sprintf("%s!%s\n", outputList[i].className, outputList[i].name)
 	}
 
 	if len(freeChars) > 0 {
-		fmt.Print("\nFree Units: ")
+		output += "\nFree Units: "
 		for i := 0; i < len(freeChars); i++ {
 			output += freeChars[i].name + " "
 		}

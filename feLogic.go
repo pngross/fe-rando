@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	random "math/rand/v2"
 	"strings"
 )
@@ -25,20 +24,12 @@ type randomizerSettings struct {
 	game             string
 	numberOfUnits    int
 	numberPerClass   int
-	useGaidens       TernaryBool // FE11 only
-	useMaleCrossover TernaryBool // FE12 only
-	route            string      // FE16 only
-	forceDancer      TernaryBool // FE12/FE16 only
-	forceJagen       TernaryBool // FE11/FE12 only
+	useGaidens       bool   // FE11 only
+	useMaleCrossover bool   // FE12 only
+	route            string // FE16 only
+	forceDancer      bool   // FE12/FE16 only
+	forceJagen       bool   // FE11/FE12 only
 }
-
-type TernaryBool int
-
-const (
-	Unclear TernaryBool = iota
-	Yes
-	No
-)
 
 var supportedGames = []string{"FE11", "FE12", "FE16"}
 
@@ -61,7 +52,7 @@ func matchClass(class feClass, unit feChar, settings randomizerSettings) bool {
 		// handles FE12's special cases: female-exclusive Falcoknight (class set "F") and special case dual-gender General (class set "D")
 		// in FE11, male crossover is deactivated and classes always have A, B or P as a class set
 		// the return formula was unified so it works either way
-		return (unit.classSet == "F" && class.classSet != "B") || (unit.classSet == class.classSet && (class.classSet != "F" || unit.specialProperty != "no-falco")) || (class.classSet != "F" && unit.classSet != "F" && settings.useMaleCrossover == Yes)
+		return (unit.classSet == "F" && class.classSet != "B") || (unit.classSet == class.classSet && (class.classSet != "F" || unit.specialProperty != "no-falco")) || (class.classSet != "F" && unit.classSet != "F" && settings.useMaleCrossover)
 	}
 	return result
 }
@@ -88,23 +79,18 @@ func randomizeList(inputList []feChar, amount int) []feChar {
 func generateAvatarUnit(settings randomizerSettings) feChar {
 	if settings.game == "FE16" {
 		if random.IntN(2) == 0 {
-			fmt.Println("Female Byleth was chosen")
 			return feChar{"Byleth", "F", "", ""}
 		} else {
-			fmt.Println("Male Byleth was chosen")
 			return feChar{"Byleth", "M", "", ""}
 		}
 	} else if settings.game == "FE12" {
 		if random.IntN(2) == 0 {
-			fmt.Println("Female Kris was chosen")
-			krisClasses := []string{"Pegasus Knight->Dracoknight/Falcoknight", "Cav->Paladin", "Archer->Sniper", "Myrmidon->Swordmaster", "Mage->Sage"}
-			return feChar{"Kris", "F", "", krisClasses[random.IntN(5)]}
+			fKrisClasses := []string{"Pegasus Knight->Dracoknight/Falcoknight", "Cav->Paladin", "Archer->Sniper", "Myrmidon->Swordmaster", "Mage->Sage"}
+			return feChar{"Kris", "F", "", fKrisClasses[random.IntN(5)]}
 		} else {
-			fmt.Println("Male Kris was chosen")
 			mKrisClasses := []string{"Knight->General", "Cav->Paladin", "Fighter->Warrior", "Archer->Sniper", "Mercenary->Hero", "Mage->Sage"}
 			return feChar{"Kris", "M", "", mKrisClasses[random.IntN(6)]}
 		}
-	} else {
-		return feChar{}
 	}
+	return feChar{}
 }
