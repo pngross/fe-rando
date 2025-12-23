@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"slices"
+	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -38,11 +40,18 @@ func (r *Randomizer) SelectGame(game string) {
 	menu.Add(widget.NewLabel(game + " - Settings:"))
 
 	r.settings, _ = readDefaultSettings(game)
+	writeFunc := r.settings.MakeUIBinding(menu)
 
 	// TODO INSERT SETTINGS HERE
 	// additional idea: allow default settings (one per game) to be saved and loaded via a json file
 
-	menu.Add(widget.NewButton("Randomize!", func() { r.Randomize() }))
+	menu.Add(widget.NewButton("Randomize!", func() {
+		writeFunc()
+		if !r.settings.Validate() {
+			return
+		}
+		r.Randomize()
+	}))
 	menu.Add(r.ReturnBtn())
 	r.window.SetContent(menu)
 }
@@ -71,4 +80,88 @@ func (r *Randomizer) Randomize() {
 
 func (r *Randomizer) ReturnBtn() *widget.Button {
 	return widget.NewButton("Back to Menu", func() { r.ToMainMenu() })
+}
+
+func (s *randomizerSettings) Validate() bool {
+	if !slices.Contains([]string{"FE11", "FE12", "FE16"}, s.game) {
+		return false
+	}
+
+	if s.game == "FE16" && !slices.Contains([]string{"VW", "AM", "SS", "CF"}, s.route) {
+		return false
+	}
+
+	if s.numberOfUnits < 0 || s.numberPerClass < 0 {
+		return false
+	}
+
+	return true
+}
+
+func (settings *randomizerSettings) MakeUIBinding(menu *fyne.Container) func() {
+	unitNumBox := widget.NewEntry()
+	unitNumBox.Text = fmt.Sprintf("%d", settings.numberOfUnits)
+	perclassNumBox := widget.NewEntry()
+	perclassNumBox.Text = fmt.Sprintf("%d", settings.numberPerClass)
+
+	routeDropdown := widget.Select{
+		Options: []string{"AM", "VW", "SS", "CF"},
+	}
+
+	menu.Add(unitNumBox)
+	menu.Add(perclassNumBox)
+
+	forceJagen := widget.Check{
+		Text:    "Force Jagen",
+		Checked: settings.forceJagen,
+	}
+
+	forceDancer := widget.Check{
+		Text:    "Force Dancer",
+		Checked: settings.forceDancer,
+	}
+
+	maleCrossover := widget.Check{
+		Text:    "Male Crossover Classes",
+		Checked: settings.useMaleCrossover,
+	}
+
+	useGaidens := widget.Check{
+		Text:    "Use Gaidens",
+		Checked: settings.useGaidens,
+	}
+
+	if settings.game == "FE11" {
+		menu.Add(&useGaidens)
+	} else {
+		menu.Add(&forceDancer)
+	}
+
+	if settings.game == "FE16" {
+		menu.Add(&routeDropdown)
+	} else {
+		menu.Add(&forceJagen)
+	}
+
+	if settings.game == "FE12" {
+		menu.Add(&maleCrossover)
+	}
+
+	writeFunc := func() {
+		settings.numberOfUnits = parseNumWithDefault(unitNumBox.Text, settings.numberOfUnits)
+		settings.numberPerClass = parseNumWithDefault(perclassNumBox.Text, settings.numberPerClass)
+		settings.forceDancer = forceDancer.Checked
+		settings.forceJagen = forceJagen.Checked
+		settings.useGaidens = useGaidens.Checked
+		settings.route = routeDropdown.Selected
+		settings.useMaleCrossover = maleCrossover.Checked
+	}
+	return writeFunc
+}
+
+func parseNumWithDefault(str string, deflt int) int {
+	if num, err := strconv.Atoi(str); err == nil {
+		return num
+	}
+	return deflt
 }
